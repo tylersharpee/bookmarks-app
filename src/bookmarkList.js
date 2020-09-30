@@ -3,6 +3,8 @@ import store from './store';
 
 import api from './api';
 
+
+// Functions to toggle Expanding Details of a Bookmark
 function displayUnexpanded(bookmark) {
   return `
   <div class = 'title-bar'>
@@ -43,6 +45,7 @@ function expandBookmark() {
   });
 }
 
+// Functions that display a list of bookmarks in the DOM
 function displayBookmark(bookmark) {
   let titleBar = 
   `<div class = 'bookmark js-bookmark' id = '${bookmark.id}'>

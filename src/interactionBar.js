@@ -14,28 +14,7 @@ function handleUpdateFilter() {
   });
 }
 
-function handleBookmarkSubmit() {
-  $('.wrapper').on('click', '.new-bookmark-submit', event => {
-    event.preventDefault();
-    let bookmark = {
-      id: cuid(),
-      title: $('#title').val(),
-      url: $('#url').val(),
-      rating: $('#add-rating').val(),
-      desc: $('#desc').val(),
-      expanded: false
-    };
-    store.addBookmark(bookmark);
-    this.render();
-    bookmarkList.render();  
-  });
-}
 
-function handleAddBookmark() {
-  $('.wrapper').on('click', '.add-bookmark', event => {
-    $('.add-menu').html(addBookmark.displayAddBookmark());
-  });
-}
 
 function displayInteractionBar() {
   return `

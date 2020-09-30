@@ -20,8 +20,6 @@ function main() {
   bookmarkList.expandBookmark();
   addBookmark.handleAddBookmark();
   addBookmark.handleBookmarkSubmit();
-  //store.editBookmark();
-  store.submitChanges();
   store.deleteBookmark();
 }
 
