@@ -1,5 +1,7 @@
 import cuid from 'cuid';
 import $ from 'jquery';
+import api from './api';
+import bookmarkList from './bookmarkList';
 import templates from './templates';
 
 const bookmarks = [
@@ -8,7 +10,7 @@ const bookmarks = [
     title: 'Title 1',
     rating: 3,
     url: 'http://www.title1.com',
-    description: 'lorem ipsum dolor sit',
+    desc: 'lorem ipsum dolor sit',
     expanded: false
   },
   {
@@ -16,7 +18,7 @@ const bookmarks = [
     title: 'Title 2',
     rating: 5,
     url: 'http://www.title2.com',
-    description: 'dolorum tempore deserunt',
+    desc: 'dolorum tempore deserunt',
     expanded: false
   } 
 ];
@@ -37,62 +39,55 @@ function findAndDelete(id) {
 function addBookmark(bookmark) {
   this.bookmarks.push(bookmark);
 }
-function handleAddBookmark() {
-  $('.wrapper').on('click', '.add-bookmark', event => {
-    $('.wrapper').html(templates.displayAddBookmark());
-  });
-}
-function handleBookmarkSubmit() {
-  $('.wrapper').on('click', '.new-bookmark-submit', event => {
-    event.preventDefault();
-    let newTitle = $('#title').val();
-    let newUrl = $('#url').val();
-    let newRating = $('#add-rating').val();
-    let newDescription = $('#description').val();
-    let bookmark = {
-      id: cuid(),
-      title: newTitle,
-      url: newUrl,
-      rating: newRating,
-      description: newDescription,
-      expanded: false
-    };
-    this.addBookmark(bookmark);
-    this.renderHome();
-    this.renderInteractionBar();
-    this.renderBookmarks();
-  });
-}
+//function handleBookmarkSubmit() {
+//  $('.wrapper').on('click', '.new-bookmark-submit', event => {
+//    event.preventDefault();
+//    let bookmark = {
+//      id: cuid(),
+//      title: $('#title').val(),
+//      url: $('#url').val(),
+//      rating: $('#add-rating').val(),
+//      desc: $('#desc').val(),
+//      expanded: false
+//    };
+//    this.addBookmark(bookmark);
+//    this.renderHome();
+//    this.renderInteractionBar();
+//    this.renderBookmarks();
+//  });
+//}
 
 // Filter Functions
-function updateFilter() {
-  $('.wrapper').on('change', '#filter', event => {
-    this.filter = $('#filter option:selected').val();
-    this.renderBookmarks();
-  });
-}
+//function updateFilter() {
+//  $('.wrapper').on('change', '#filter', event => {
+//    this.filter = $('#filter option:selected').val();
+//    this.renderBookmarks();
+//  });
+//}
 
 // Expand Bookmark Functions
 function toggleExpanded(bookmark) {
   bookmark.expanded = !bookmark.expanded;
 }
-function expandBookmark() {
-  $('.wrapper').on('click', '.title-bar', event => {
-    let bookmark = this.findById($(event.target).parent().parent().attr('id'));
-    if (bookmark.expanded) {
-      $(event.currentTarget).parent().html(templates.displayBookmark(bookmark));
-    }
-    else {
-      $(event.currentTarget).parent().html(templates.displayExpanded(bookmark));
-    }
-    toggleExpanded(bookmark);
-  });
-}
+//function expandBookmark() {
+//  $('.wrapper').on('click', '.expand-button', event => {
+//    let bookmark = this.findById($(event.target).parent().parent().attr('id'));
+//    if (bookmark.expanded) {
+//      $(event.currentTarget).parent().parent().html(templates.displayUnexpanded(bookmark));
+//    }
+//    else {
+//      $(event.currentTarget).parent().parent().html(templates.displayExpanded(bookmark));
+//    }
+//    toggleExpanded(bookmark);
+//  });
+//}
 function deleteBookmark() {
   $('.wrapper').on('click', '.delete-bookmark', event => {
     let bookmark = this.findById(event.target.closest('.bookmark').id);
     this.findAndDelete(bookmark.id);
-    this.renderBookmarks();
+    api.deleteData(bookmark.id);
+    bookmarkList.render();
+    console.log('delete ran');
   });
 }
 function editBookmark() {
@@ -101,32 +96,37 @@ function editBookmark() {
     $(event.target).closest('.bookmark').html(templates.displayEditBookmark(bookmark));
   });
 }
+
+function inputError() {
+  return `
+  <div>URL must begin with "https://"</div>
+  `;
+}
+function validInput(url) {
+  if(url.includes('https://')) return true;
+  else return false;
+}
 function updateBookmark(bookmark) {
   bookmark.title = $('#title').val();
   bookmark.url = $('#url').val();
   bookmark.rating = $('#rating').val();
-  bookmark.description = $('#description').val();
+  bookmark.desc = $('#desc').val();
+  toggleExpanded(bookmark);
+  return bookmark;
 }
 function submitChanges() {
   $('.wrapper').on('click', '.submit-edit', event => {
-    let bookmark = this.findById(event.target.closest('.bookmark').id);
-    this.updateBookmark(bookmark);
-    $(event.target).closest('.bookmark').html(templates.displayExpanded(bookmark));
-  });
-}
-// Render Functions
-function renderHome() {
-  $('.wrapper').html(templates.displayHome());
-}
-function renderInteractionBar() {
-  $('.interaction-bar').html(templates.displayInteractionBar());
-}
-function renderBookmarks() {
-  $('.bookmark-list').html('');
-  this.bookmarks.forEach(bookmark => {
-    if (bookmark.rating >= this.filter) {
-      $('.bookmark-list').append(templates.displayBookmark(bookmark));
+    let id = event.target.closest('.bookmark').id;
+    let bookmark = this.findById(id);
+    let newUrl = $('#url').val();
+    console.log(id);
+    if (validInput(newUrl)) {
+      this.updateBookmark(bookmark);
+      console.log(this.bookmarks);
+      api.patchData(id, bookmark);
+      $(event.target).closest('.bookmark').html(templates.displayExpanded(bookmark));
     }
+    else $(event.target).closest('.bookmark').append(inputError());
   });
 }
 
@@ -138,16 +138,12 @@ export default {
   filter,
   findById,
   addBookmark,
-  handleAddBookmark,
-  handleBookmarkSubmit,
-  expandBookmark,
   editBookmark,
   submitChanges,
   deleteBookmark,
   updateBookmark,
   findAndDelete,
-  updateFilter,
-  renderHome,
-  renderInteractionBar,
-  renderBookmarks
+  validInput,
+  toggleExpanded,
+  inputError
 };

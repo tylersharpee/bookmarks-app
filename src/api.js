@@ -31,21 +31,32 @@ function getData() {
 }
 
 function postData(bookmark) {
+  const newBookmark = JSON.stringify(bookmark);
+  console.log('Post Data; ran');
   return apiFetch(`${BASE_URL}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: bookmark
+    body: newBookmark
   });
 }
 
-function patchData() {
-
+function patchData(id, bookmark) {
+  const newBookmark = JSON.stringify(bookmark);
+  return apiFetch(`${BASE_URL}/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: newBookmark
+  });
 }
 
-function deleteData() {
-
+function deleteData(id) {
+  return apiFetch(`${BASE_URL}/${id}`, {
+    method: 'DELETE'
+  });
 }
 
 export default {

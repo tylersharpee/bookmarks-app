@@ -1,4 +1,25 @@
-body {
-  display: flex;
+main {
   justify-content: center;
+  text-align: center;
+}
+
+.bookmark, .interaction-bar, .title-bar, .expanded, .form-wrapper {
+  background-color: burlywood;
+  margin: 5px auto;
+  padding: 5px;
+  border: 1px solid black;
+  max-width: 400px;
+  min-width: 240px;
+}
+.interactions, .title-bar, .input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.add-bookmark {
+  align-self: left;
+}
+
+.filter {
+  align-self: right;
 }

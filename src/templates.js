@@ -1,57 +1,77 @@
-function displayHome() {
+//function displayInteractionBar() {
+//  return `
+//  <div class = 'interaction-bar'>
+//    <button class = 'add-bookmark'>Add Bookmark</button>
+//    <div class = 'filter-wrapper'>
+//      <label for = 'filter'> Filter by Rating:</label>
+//      <select name = 'filter' id = 'filter'>
+//        <option value = '1'>1</option>
+//        <option value = '2'>2</option>
+//        <option value = '3'>3</option>
+//        <option value = '4'>4</option>
+//        <option value = '5'>5</option>
+//      </select>
+//    </div>
+//  </div>
+//  <div class = 'bookmark-list'>
+//  </div>
+//  `;
+//}
+//function displayInteractionBar() {
+//  let interactionBar = 
+//  `
+//  <button class = 'add-bookmark'>Add Bookmark</button>
+//  <div class = 'filter-wrapper'>
+//    <label for = 'filter' class = 'filter'> Filter by Rating:</label>
+//    <select name = 'filter' class = 'filter' id = 'filter'>
+//      <option value = '1'>1</option>
+//      <option value = '2'>2</option>
+//      <option value = '3'>3</option>
+//      <option value = '4'>4</option>
+//      <option value = '5'>5</option>
+//    </select>
+//  </div>
+//  `;
+//  return interactionBar;
+//}
+//function displayBookmark(bookmark) {
+//  let titleBar = 
+//  `<div class = 'bookmark js-bookmark' id = '${bookmark.id}'>
+//    <div class = 'title-bar'>
+//      <span class = '-title'>Title: ${bookmark.title}</span>
+//      <button class = 'expand-button'>View Details</button>
+//      <span class = 'rating'>Rating: ${bookmark.rating}<span>
+//    </div>
+//  </div>`;
+//  return titleBar;
+//}
+function displayUnexpanded(bookmark) {
   return `
-  <div class = 'interaction-bar'>
-    <button class = 'add-bookmark'>Add Bookmark</button>
-    <label for = 'filter'> Filter by Rating:</label>
-    <select name = 'filter' id = 'filter'>
-      <option value = '1'>1</option>
-      <option value = '2'>2</option>
-      <option value = '3'>3</option>
-      <option value = '4'>4</option>
-      <option value = '5'>5</option>
-    </select>
-  </div>
-  <div class = 'bookmark-list'>
+  <div class = 'title-bar'>
+    <span class = 'title'>Title: ${bookmark.title}</span>
+    <button class = 'expand-button'>View Details</button>
+    <span class = 'rating'>Rating: ${bookmark.rating}<span>
   </div>
   `;
-}
-function displayInteractionBar() {
-  let interactionBar = 
-  `<button class = 'add-bookmark'>Add Bookmark</button>
-  <label for = 'filter'> Filter by Rating:</label>
-  <select name = 'filter' id = 'filter'>
-    <option value = '1'>1</option>
-    <option value = '2'>2</option>
-    <option value = '3'>3</option>
-    <option value = '4'>4</option>
-    <option value = '5'>5</option>
-  </select>`;
-  return interactionBar;
-}
-function displayBookmark(bookmark) {
-  let titleBar = 
-  `<div class = 'bookmark js-bookmark' id = '${bookmark.id}'>
-    <div class = 'title-bar'>
-      <span class = 'title'>${bookmark.title}</span>
-      <span class = 'rating'>${bookmark.rating}<span>
-    </div>
-  </div>`;
-  return titleBar;
 }
 function displayAddBookmark() {
   let addBookmark =
   `
-  <form>
+  <form class = 'form-wrapper'>
     <div>Add Bookmark:</div>
-    <div>
+    <div class = 'input-wrapper'>
       <label for = 'title'>Title:</label>
+      <span>
       <input name = 'title' id = 'title' placeholder = 'Example Title' required>
-    </div>
-    <div>
+      </span>
+      </div>
+    <div class = 'input-wrapper'>
       <label for = 'url'>Url:</label>
+      <span>
       <input name = 'url' id = 'url' placeholder = 'https://example.com' required>
-    </div>
-    <div>
+      </span>
+      </div>
+    <div class = 'input-wrapper'>
       <label for = 'add-rating'>Rating:</label>
       <select name = 'add-rating' id = 'add-rating' required>
         <option value = '1'>1</option>
@@ -61,9 +81,9 @@ function displayAddBookmark() {
         <option value = '5'>5</option>
       </select>
     </div>
-    <div>
-      <label for = 'description'>Description:</label>
-      <textarea name = 'description' id = 'description' placeholder = 'Example description' style = 'resize: none' required></textarea>
+    <div class = 'input-wrapper'>
+      <label for = 'desc'>desc:</label>
+      <textarea name = 'desc' id = 'desc' placeholder = 'Example desc' style = 'resize: none' required></textarea>
     </div>
     <button type = 'submit' class = 'new-bookmark-submit'>Submit</button>
   </form>
@@ -73,15 +93,16 @@ function displayAddBookmark() {
 function displayExpanded(bookmark) {
   return `
   <div class = 'title-bar'>
-    <span class = 'title'>${bookmark.title}</span>
-    <span class = 'rating'>${bookmark.rating}</span>
+    <span class = 'title'>Title: ${bookmark.title}</span>
+    <button class = 'expand-button'>Minimize</button>
+    <span class = 'rating'>Rating: ${bookmark.rating}</span>
   </div>
-  <div>
+  <div class = 'expanded'>
     <button class = 'edit-bookmark'>Edit</button>
     <button class = 'delete-bookmark'>Delete</button>
-    <div class = 'expanded'>
+    <div class = 'expanded-details'>
       <div class = 'visit-url'><a href='${bookmark.url}' target = '_blank'>${bookmark.url}</a></div>
-      <div class = 'expanded-description'>${bookmark.description}</div>
+      <div class = 'expanded-desc'>${bookmark.desc}</div>
     </div>
   </div>
   `;
@@ -111,8 +132,8 @@ function displayEditBookmark(bookmark) {
         <input id = 'url' placeholder = '${bookmark.url}' required>
       </div>
       <div>
-        <label for = 'description'>Description:</label>
-        <textarea name = 'description' id = 'description' placeholder = '${bookmark.description}' style = 'resize:none' required></textarea>
+        <label for = 'desc'>desc:</label>
+        <textarea name = 'desc' id = 'desc' placeholder = '${bookmark.desc}' style = 'resize:none' required></textarea>
       </div>
     </div>
     <button class = 'submit-edit'>Submit</button>
@@ -121,10 +142,10 @@ function displayEditBookmark(bookmark) {
   `;
 }
 export default {
-  displayInteractionBar,
+//  displayInteractionBar,
   displayAddBookmark,
-  displayHome,
-  displayBookmark,
+//  displayHome,
   displayExpanded,
+  displayUnexpanded,
   displayEditBookmark
 };
